@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:gravity="center_horizontal"
     tools:context=".view.LoginActivity">
 
@@ -15,7 +15,7 @@
             android:src="@drawable/login"
             android:layout_marginBottom="20dp"/>
         <EditText
-            android:layout_width="350dp"
+            android:layout_width="370dp"
             android:layout_height="50dp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
@@ -26,7 +26,7 @@
             android:hint="Email của bạn"
             android:layout_marginBottom="12dp"/>
         <EditText
-            android:layout_width="350dp"
+            android:layout_width="370dp"
             android:layout_height="50dp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
@@ -36,23 +36,34 @@
             android:background="@drawable/custom_input"
             android:hint="Mật khẩu"/>
         <Button
-            android:layout_width="350dp"
+            android:layout_width="370dp"
             android:layout_height="50dp"
             android:text="đăng nhập"
             android:textSize="17sp"
             android:textStyle="bold"
             android:textAllCaps="true"
-            android:backgroundTint="@color/purple_700"/>
+            android:backgroundTint="@color/purple_700"
+            android:layout_marginTop="18px"/>
+
+        <ImageButton
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/affect_ripple"
+            android:src="@drawable/google"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:backgroundTint="#F3EFEF">
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/openRegisterActivity"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@color/purple_700"
-                    android:textStyle="bold"
                     android:text="Tạo tài khoản mới"
+                    android:textColor="@color/purple_700"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

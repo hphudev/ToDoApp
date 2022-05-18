@@ -53,5 +53,6 @@
         android:textSize="17sp"
         android:textStyle="bold"
         android:textAllCaps="true"
-        android:backgroundTint="@color/purple_700"/>
+        android:backgroundTint="@color/purple_700"
+        android:layout_marginTop="15dp"/>
 </LinearLayout>
