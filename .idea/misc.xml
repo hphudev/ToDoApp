@@ -4,8 +4,18 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable-anydpi/ic_baseline_done_24.xml" value="0.137" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_email_icon.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_input.xml" value="0.2585" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_lock_icon.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_person_icon.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.2125" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_email_24_focused.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_lock_24_focused.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_person_24_focused.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/activity_main.xml" value="0.2033514492753623" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/activity_register.xml" value="0.25416666666666665" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/activity_splash.xml" value="0.2" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2125" />
       </map>

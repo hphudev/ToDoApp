@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:gravity="center_horizontal"
+    tools:context=".view.LoginActivity">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/login"
+            android:layout_marginBottom="20dp"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="18sp"
+            android:drawableStart="@drawable/custom_email_icon"
+            android:drawablePadding="12dp"
+            android:background="@drawable/custom_input"
+            android:hint="Email của bạn"
+            android:layout_marginBottom="12dp"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="18sp"
+            android:drawableStart="@drawable/custom_lock_icon"
+            android:drawablePadding="12dp"
+            android:background="@drawable/custom_input"
+            android:hint="Mật khẩu"/>
+        <Button
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:text="đăng nhập"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:backgroundTint="@color/purple_700"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/purple_700"
+                    android:textStyle="bold"
+                    android:text="Tạo tài khoản mới"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
