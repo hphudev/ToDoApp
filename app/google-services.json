@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "541301564999",
+    "firebase_url": "https://vndo-3abf3-default-rtdb.firebaseio.com",
     "project_id": "vndo-3abf3",
     "storage_bucket": "vndo-3abf3.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "541301564999-29ee09q5upcm992ti08vfrntn9efsj7q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.todo",
+            "certificate_hash": "64e97e9cc0ec231e1aedb119d1cfb078a412e815"
+          }
+        },
         {
           "client_id": "541301564999-po7v303o1vcpfmggstbg9sq5jflvk89i.apps.googleusercontent.com",
           "client_type": 3
