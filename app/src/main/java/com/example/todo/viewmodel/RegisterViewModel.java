@@ -14,6 +14,7 @@ import com.example.todo.BR;
 import com.example.todo.model.data.UserModel;
 import com.example.todo.model.library.CustomProgressDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,13 +83,14 @@ public class RegisterViewModel extends BaseObservable {
                         setEmail("");
                         setPassword("");
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                        if (firebaseUser != null)
-                        {
-                            Toast.makeText(activity, firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
-                        }
                         if (!firebaseUser.isEmailVerified())
                         {
-
+                            firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(activity, "Email xác nhận đã được gửi", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     }
                     else

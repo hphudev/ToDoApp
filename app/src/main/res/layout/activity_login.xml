@@ -65,7 +65,7 @@
                     android:textAllCaps="true"
                     android:backgroundTint="@color/purple_700"
                     android:layout_marginTop="18px"
-                    android:onClick="@{() -> LoginViewModel.onClickLogin()}"/>
+                    android:onClick="@{() -> LoginViewModel.onClickLoginWithPassword()}"/>
 
                 <ImageButton
                     android:id="@+id/btn_login_google"

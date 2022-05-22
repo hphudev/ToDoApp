@@ -3,6 +3,7 @@ package com.example.todo.viewmodel;
 import static com.example.todo.view.LoginActivity.RC_SIGN_IN;
 import static com.example.todo.view.LoginActivity.TAG_GOOGLE;
 import static com.example.todo.view.LoginActivity.googleSignInClient;
+import static com.example.todo.view.LoginActivity.mAuth;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,7 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -27,7 +30,10 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -63,7 +69,7 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.password);
     }
 
-    public void onClickLogin()
+    public void onClickLoginWithPassword()
     {
         UserModel user = new UserModel(null, getEmail(), getPassword());
         isShowMessage.set(true);
@@ -71,8 +77,19 @@ public class LoginViewModel extends BaseObservable {
         {
             messageLogin.set("Đang tiến hành đăng nhập");
             isSuccess.set(true);
-            Intent intent = new Intent(activity, MainActivity.class);
-            activity.startActivity(intent);
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful())
+                    {
+                        goToMainActivity();
+                    }
+                    else
+                    {
+                        Toast.makeText(activity, "Đăng nhập thất bại", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
         else
         {
@@ -88,5 +105,11 @@ public class LoginViewModel extends BaseObservable {
         Intent intent = googleSignInClient.getSignInIntent();
         activity.startActivityForResult(intent, RC_SIGN_IN);
     }
+
+    public void goToMainActivity()
+    {
+        activity.startActivity(new Intent(activity, MainActivity.class));
+    }
+
 
 }

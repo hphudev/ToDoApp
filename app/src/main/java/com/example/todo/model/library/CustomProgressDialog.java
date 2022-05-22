@@ -22,7 +22,7 @@ public class CustomProgressDialog {
         progressDialog.setCancelable(true);
     }
 
-    public void show()
+    static public void show()
     {
         if (progressDialog != null && !progressDialog.isShowing())
         {
