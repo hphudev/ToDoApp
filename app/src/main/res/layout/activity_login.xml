@@ -66,11 +66,13 @@
                     android:onClick="@{() -> LoginViewModel.onClickLogin()}"/>
 
                 <ImageButton
+                    android:id="@+id/btn_login_google"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/affect_ripple"
-                    android:src="@drawable/google"/>
+                    android:src="@drawable/google"
+                    android:onClick="@{() -> LoginViewModel.onClickGoogleSignIn()}"/>
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
