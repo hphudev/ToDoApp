@@ -3,6 +3,7 @@ package com.example.todo.viewmodel;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterViewModel extends BaseObservable {
     private String nickname;
@@ -76,6 +78,18 @@ public class RegisterViewModel extends BaseObservable {
                     CustomProgressDialog.dismiss();
                     if (task.isSuccessful()){
                         messageRegister.set("Tài khoản đã được đăng ký thành công");
+                        setNickname("");
+                        setEmail("");
+                        setPassword("");
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null)
+                        {
+                            Toast.makeText(activity, firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
+                        }
+                        if (!firebaseUser.isEmailVerified())
+                        {
+
+                        }
                     }
                     else
                     {

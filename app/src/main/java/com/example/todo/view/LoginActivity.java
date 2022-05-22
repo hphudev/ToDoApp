@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.todo.R;
 import com.example.todo.databinding.ActivityLoginBinding;
@@ -36,9 +37,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import com.example.todo.model.library.*;
+import com.google.firebase.auth.UserInfo;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -91,7 +94,23 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null)
         {
-            loginViewModel.onClickGoogleSignIn();
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.getAccessToken(false).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                @Override
+                public void onSuccess(GetTokenResult getTokenResult) {
+                    String strProvider = getTokenResult.getSignInProvider();
+                    Toast.makeText(getBaseContext(), strProvider, Toast.LENGTH_SHORT).show();
+                    if (strProvider.equals("google.com"))
+                    {
+                        loginViewModel.onClickGoogleSignIn();
+                    }
+//
+//                    So, if (strProvider.equals("password")) then the authentication is by Email + Password,
+//                    if (strProvider.equals("google.com")) then the authentication is via Google,
+//                    if (strProvider.equals("facebook.com")) then the authentication is via Facebook.
+                }
+            });
+
         }
     }
 
