@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -37,10 +38,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import com.example.todo.model.library.*;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextView openRegisterActivity;
+    private LoginViewModel loginViewModel;
+    private ActivityLoginBinding activityLoginBinding;
     public static GoogleSignInClient googleSignInClient;
     public static FirebaseAuth mAuth;
     public static String TAG_GOOGLE = "GOOGLE_SIGN_IN_TAG";
@@ -52,16 +56,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-        ActivityLoginBinding activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        LoginViewModel loginViewModel = new LoginViewModel(this);
+        activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        loginViewModel = new LoginViewModel(this);
         activityLoginBinding.setLoginViewModel(loginViewModel);
         init();
-       init_google();
+        init_google();
     }
 
     private void init_google() {
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.client_web_id))
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
@@ -82,7 +86,19 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+
         super.onStart();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null)
+        {
+            loginViewModel.onClickGoogleSignIn();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        CustomProgressDialog.dismiss();
     }
 
     @Override
@@ -99,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
             catch (Exception e)
             {
                 Log.d(TAG_GOOGLE, "onActivityResut: " + e.getMessage());
+                CustomProgressDialog.dismiss();
             }
         }
     }
@@ -116,12 +133,14 @@ public class LoginActivity extends AppCompatActivity {
                         String userEmail = firebaseUser.getEmail();
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG_GOOGLE, "onSuccess: Logged failed");
+                        CustomProgressDialog.dismiss();
                     }
                 });
     }

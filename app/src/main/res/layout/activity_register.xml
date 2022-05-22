@@ -1,58 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="10dp"
-    android:gravity="center_horizontal"
     tools:context=".view.RegisterActivity">
-
-    <ImageView
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="RegisterViewModel"
+            type="com.example.todo.viewmodel.RegisterViewModel" />
+    </data>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sign_up"
-        android:layout_marginBottom="20dp"/>
-    <EditText
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:textSize="18sp"
-        android:drawableStart="@drawable/custom_person_icon"
-        android:drawablePadding="12dp"
-        android:background="@drawable/custom_input"
-        android:hint="Tên của bạn"
-        android:layout_marginBottom="12dp"/>
-    <EditText
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:textSize="18sp"
-        android:drawableStart="@drawable/custom_email_icon"
-        android:drawablePadding="12dp"
-        android:background="@drawable/custom_input"
-        android:hint="Email của bạn"
-        android:layout_marginBottom="12dp"/>
-    <EditText
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:textSize="18sp"
-        android:drawableStart="@drawable/custom_lock_icon"
-        android:drawablePadding="12dp"
-        android:background="@drawable/custom_input"
-        android:hint="Mật khẩu"/>
-    <Button
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:text="đăng ký"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        android:backgroundTint="@color/purple_700"
-        android:layout_marginTop="15dp"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sign_up"
+            android:layout_marginBottom="20dp"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="18sp"
+            android:text="@={RegisterViewModel.nickname}"
+            android:drawableStart="@drawable/custom_person_icon"
+            android:drawablePadding="12dp"
+            android:background="@drawable/custom_input"
+            android:hint="Biệt danh của bạn"
+            android:layout_marginBottom="12dp"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="18sp"
+            android:text="@={RegisterViewModel.email}"
+            android:drawableStart="@drawable/custom_email_icon"
+            android:drawablePadding="12dp"
+            android:background="@drawable/custom_input"
+            android:hint="Email của bạn"
+            android:layout_marginBottom="12dp"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="18sp"
+            android:text="@={RegisterViewModel.password}"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/custom_lock_icon"
+            android:drawablePadding="12dp"
+            android:background="@drawable/custom_input"
+            android:hint="Mật khẩu"/>
+        <TextView
+            android:layout_width="370dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{RegisterViewModel.isShowMessage ? View.VISIBLE : View.GONE}"
+            android:textAlignment="center"
+            android:text="@{RegisterViewModel.messageRegister}"
+            android:textSize="18sp"
+            android:textColor="@{RegisterViewModel.isSuccess ? @color/green : @color/red}"
+            android:layout_marginTop="10dp"/>
+        <Button
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:text="đăng ký"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:backgroundTint="@color/purple_700"
+            android:layout_marginTop="10dp"
+            android:onClick="@{() -> RegisterViewModel.onClickRegister()}"/>
+    </LinearLayout>
+</layout>

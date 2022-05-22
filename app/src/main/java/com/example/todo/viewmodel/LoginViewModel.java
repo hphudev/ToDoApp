@@ -5,6 +5,7 @@ import static com.example.todo.view.LoginActivity.TAG_GOOGLE;
 import static com.example.todo.view.LoginActivity.googleSignInClient;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -19,6 +20,7 @@ import androidx.databinding.ObservableField;
 import com.example.todo.BR;
 import com.example.todo.R;
 import com.example.todo.model.data.UserModel;
+import com.example.todo.model.library.CustomProgressDialog;
 import com.example.todo.view.LoginActivity;
 import com.example.todo.view.MainActivity;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
@@ -63,7 +65,7 @@ public class LoginViewModel extends BaseObservable {
 
     public void onClickLogin()
     {
-        UserModel user = new UserModel(getEmail(), getPassword());
+        UserModel user = new UserModel(null, getEmail(), getPassword());
         isShowMessage.set(true);
         if (user.isValidEmail() && user.isValidPassword())
         {
@@ -81,6 +83,8 @@ public class LoginViewModel extends BaseObservable {
 
     public void onClickGoogleSignIn() {
         Log.d(TAG_GOOGLE, "begin Sign in");
+        CustomProgressDialog progressDialog = new CustomProgressDialog(activity, ProgressDialog.STYLE_SPINNER, "Đang tiến hành đăng nhập...");
+        progressDialog.show();
         Intent intent = googleSignInClient.getSignInIntent();
         activity.startActivityForResult(intent, RC_SIGN_IN);
     }

@@ -7,10 +7,12 @@ import java.util.regex.Pattern;
 
 public class UserModel {
 
+    private String nickName;
     private String email;
     private String password;
 
-    public UserModel(String email, String password) {
+    public UserModel(String nickName, String email, String password) {
+        this.nickName = nickName;
         this.email = email;
         this.password = password;
     }
@@ -37,5 +39,10 @@ public class UserModel {
 
     public boolean isValidPassword(){
         return !TextUtils.isEmpty(password) && password.length() > 6;
+    }
+
+    public boolean isValidNickname()
+    {
+        return !TextUtils.isEmpty(nickName);
     }
 }

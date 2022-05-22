@@ -41,6 +41,7 @@
                     android:paddingEnd="12dp"
                     android:textSize="18sp"
                     android:text="@={LoginViewModel.password}"
+                    android:inputType="textPassword"
                     android:drawableStart="@drawable/custom_lock_icon"
                     android:drawablePadding="12dp"
                     android:background="@drawable/custom_input"
@@ -52,7 +53,8 @@
                     android:textAlignment="center"
                     android:text="@{LoginViewModel.messageLogin}"
                     android:textSize="18sp"
-                    android:textColor="@{LoginViewModel.isSuccess ? @color/green : @color/red}"/>
+                    android:textColor="@{LoginViewModel.isSuccess ? @color/green : @color/red}"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/btn_login"
                     android:layout_width="370dp"
