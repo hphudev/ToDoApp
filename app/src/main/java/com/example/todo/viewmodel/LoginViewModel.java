@@ -112,7 +112,7 @@ public class LoginViewModel extends BaseObservable {
     public void goToMainActivity()
     {
         activity.startActivity(new Intent(activity, MainActivity.class));
-        activity.finish();
+//        activity.finish();
     }
 
     public void onClickResetPassword()

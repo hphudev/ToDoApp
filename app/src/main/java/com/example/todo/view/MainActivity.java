@@ -17,19 +17,20 @@ import com.example.todo.model.library.CustomAlertDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface {
 
-    Button btnSignOut;
+    FloatingActionButton btnSignOut;
     private int CODE_CHECK_EMAIL_VERIFY = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkEmailVerify();
-        btnSignOut = (Button)findViewById(R.id.btn_sign_out);
+        btnSignOut = (FloatingActionButton)findViewById(R.id.btn_sign_out);
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

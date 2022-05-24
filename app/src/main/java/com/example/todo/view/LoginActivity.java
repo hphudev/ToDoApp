@@ -95,18 +95,17 @@ public class LoginActivity extends AppCompatActivity {
         if (!(firebaseUser == null))
         {
             loginViewModel.goToMainActivity();
-            mAuth.getAccessToken(false).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
-                @Override
-                public void onSuccess(GetTokenResult getTokenResult) {
-                    String strProvider = getTokenResult.getSignInProvider();
-                    Toast.makeText(getBaseContext(), strProvider, Toast.LENGTH_SHORT).show();
-
-//                    So, if (strProvider.equals("password")) then the authentication is by Email + Password,
-//                    if (strProvider.equals("google.com")) then the authentication is via Google,
-//                    if (strProvider.equals("facebook.com")) then the authentication is via Facebook.
-                }
-            });
-
+//            mAuth.getAccessToken(false).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+//                @Override
+//                public void onSuccess(GetTokenResult getTokenResult) {
+//                    String strProvider = getTokenResult.getSignInProvider();
+//                    Toast.makeText(getBaseContext(), strProvider, Toast.LENGTH_SHORT).show();
+//
+////                    So, if (strProvider.equals("password")) then the authentication is by Email + Password,
+////                    if (strProvider.equals("google.com")) then the authentication is via Google,
+////                    if (strProvider.equals("facebook.com")) then the authentication is via Facebook.
+//                }
+//            });
         }
     }
 

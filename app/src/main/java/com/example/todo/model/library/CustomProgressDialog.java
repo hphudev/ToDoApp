@@ -15,6 +15,8 @@ public class CustomProgressDialog {
         progressDialog = new ProgressDialog(context);
         progressDialog.setProgressStyle(style);
         progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
         if (style == ProgressDialog.STYLE_SPINNER)
             isSpinner = true;
         else
