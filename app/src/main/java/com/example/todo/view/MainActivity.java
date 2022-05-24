@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.todo.R;
 import com.example.todo.model.library.CustomAlertDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface {
 
     FloatingActionButton btnSignOut;
+    ImageView imgUserProfile;
     private int CODE_CHECK_EMAIL_VERIFY = 1;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     @Override
@@ -49,11 +52,12 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         }
         collapsingToolbarLayout.setTitle(firebaseUser.getEmail());
         Uri uri = firebaseUser.getPhotoUrl();
-
+        Glide.with(this).load(uri).error(R.drawable.ic_baseline_person_24).into(imgUserProfile);
     }
 
     private void init()
     {
+        imgUserProfile = (ImageView) findViewById(R.id.img_user_profile);
         btnSignOut = (FloatingActionButton)findViewById(R.id.btn_sign_out);
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
