@@ -85,11 +85,13 @@ public class LoginViewModel extends BaseObservable {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful())
                     {
+                        Toast.makeText(activity, "Đăng nhập thành công", Toast.LENGTH_LONG).show();
                         goToMainActivity();
                     }
                     else
                     {
                         Toast.makeText(activity, "Đăng nhập thất bại", Toast.LENGTH_LONG).show();
+                        CustomProgressDialog.dismiss();
                     }
                 }
             });

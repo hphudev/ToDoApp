@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.todo.model.library.CustomAlertDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,11 +27,33 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 
     FloatingActionButton btnSignOut;
     private int CODE_CHECK_EMAIL_VERIFY = 1;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        init();
         checkEmailVerify();
+
+    }
+
+    private void checkEmailVerify()
+    {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (!firebaseUser.isEmailVerified())
+        {
+            CustomAlertDialog customAlertDialog = new CustomAlertDialog("Xác minh tài khoản","Một email sẽ được gử cho bạn", CODE_CHECK_EMAIL_VERIFY);
+            customAlertDialog.show(getSupportFragmentManager(), "dialog");
+        }
+        collapsingToolbarLayout.setTitle(firebaseUser.getEmail());
+        Uri uri = firebaseUser.getPhotoUrl();
+
+    }
+
+    private void init()
+    {
         btnSignOut = (FloatingActionButton)findViewById(R.id.btn_sign_out);
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,16 +67,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                 }, 500);
             }
         });
-    }
-
-    private void checkEmailVerify()
-    {
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (!firebaseUser.isEmailVerified())
-        {
-            CustomAlertDialog customAlertDialog = new CustomAlertDialog("Xác minh tài khoản","Một email sẽ được gử cho bạn", CODE_CHECK_EMAIL_VERIFY);
-            customAlertDialog.show(getSupportFragmentManager(), "dialog");
-        }
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.appbar_collapse);
     }
 
     private void GoogleSignOut() {
