@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onStart();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null)
+        if (!(firebaseUser == null))
         {
             loginViewModel.goToMainActivity();
             mAuth.getAccessToken(false).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {

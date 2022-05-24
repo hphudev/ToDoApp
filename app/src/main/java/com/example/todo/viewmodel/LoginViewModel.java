@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -77,6 +79,7 @@ public class LoginViewModel extends BaseObservable {
         {
             messageLogin.set("Đang tiến hành đăng nhập");
             isSuccess.set(true);
+            new CustomProgressDialog(activity, ProgressDialog.STYLE_SPINNER, "Đang đăng nhập...").show();
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -109,6 +112,39 @@ public class LoginViewModel extends BaseObservable {
     public void goToMainActivity()
     {
         activity.startActivity(new Intent(activity, MainActivity.class));
+        activity.finish();
+    }
+
+    public void onClickResetPassword()
+    {
+        UserModel userModel = new UserModel("", getEmail(), "");
+        if (!userModel.isValidEmail())
+        {
+            isShowMessage.set(true);
+            isSuccess.set(false);
+            messageLogin.set("Vui lòng nhập email ở trên");
+        }
+        else {
+            mAuth.sendPasswordResetEmail(userModel.getEmail())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                            {
+                                isShowMessage.set(true);
+                                isSuccess.set(true);
+                                messageLogin.set("Hệ thống đã gửi một email cho bạn");
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isShowMessage.set(false);
+                                    }
+                                }, 5000);
+                            }
+                        }
+                    });
+//        mAuth.sendPasswordResetEmail()
+        }
     }
 
 

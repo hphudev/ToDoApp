@@ -46,6 +46,20 @@
                     android:drawablePadding="12dp"
                     android:background="@drawable/custom_input"
                     android:hint="Mật khẩu"/>
+
+                <TextView
+                    android:layout_width="370dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/affect_ripple"
+                    android:backgroundTint="#FFFFFF"
+                    android:onClick="@{() -> LoginViewModel.onClickResetPassword()}"
+                    android:text="Quên mật khẩu?"
+                    android:textAlignment="center"
+                    android:textColor="@color/purple_700"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:layout_width="370dp"
                     android:layout_height="wrap_content"
