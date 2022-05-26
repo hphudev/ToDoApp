@@ -102,6 +102,7 @@
                             android:textColor="@color/purple_700"
                             android:textSize="15sp"
                             android:textAlignment="center"
+                            android:background="@drawable/affect_ripple"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />

@@ -43,8 +43,8 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/img_user_profile"
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/ic_baseline_person_24"
                     app:civ_border_width="2dp"
                     android:layout_gravity="top|right"
@@ -69,10 +69,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <TextView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycv_default_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="asdadad"/>
+                android:clickable="true"
+                android:focusable="true">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycv_custom_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
 
 
@@ -83,13 +94,13 @@
         android:id="@+id/btn_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="15dp"
         android:baselineAlignBottom="false"
         android:backgroundTint="@color/purple_700"
         android:clickable="true"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_baseline_settings_24"
-        app:fabSize="normal"
+        app:fabSize="mini"
         app:layout_anchor="@id/appBar"
         app:tint="#FFFFFF"
         app:layout_anchorGravity="bottom|end" />

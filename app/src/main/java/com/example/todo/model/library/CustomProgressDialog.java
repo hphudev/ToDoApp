@@ -40,4 +40,10 @@ public class CustomProgressDialog {
             progressDialog = null;
         }
     }
+
+    static public void setMessage(String message)
+    {
+        if (progressDialog != null && progressDialog.isShowing())
+            progressDialog.setMessage(message);
+    }
 }

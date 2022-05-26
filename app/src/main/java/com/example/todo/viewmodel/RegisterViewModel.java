@@ -19,6 +19,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterViewModel extends BaseObservable {
     private String nickname;
@@ -76,22 +81,10 @@ public class RegisterViewModel extends BaseObservable {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    CustomProgressDialog.dismiss();
                     if (task.isSuccessful()){
-                        messageRegister.set("Tài khoản đã được đăng ký thành công");
-                        setNickname("");
-                        setEmail("");
-                        setPassword("");
-                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                        if (!firebaseUser.isEmailVerified())
-                        {
-                            firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(activity, "Email xác nhận đã được gửi", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
+                        messageRegister.set("Đang đăng ký biệt danh cho bạn");
+                        CustomProgressDialog.setMessage("Hệ thống đang đăng ký biệt danh cho bạn...");
+                        onRegisteronFirestore();
                     }
                     else
                     {
@@ -105,6 +98,40 @@ public class RegisterViewModel extends BaseObservable {
             messageRegister.set("Thông tin đăng ký chưa hợp lệ");
             isSuccess.set(false);
         }
+    }
+
+    public void onRegisteronFirestore()
+    {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", getEmail());
+        user.put("biet_danh", getNickname());
+        firestore.collection("nguoidung")
+                        .add(user)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                CustomProgressDialog.dismiss();
+                                if (task.isSuccessful())
+                                {
+                                    messageRegister.set("Tài khoản đã được đăng ký thành công");
+                                    setNickname("");
+                                    setEmail("");
+                                    setPassword("");
+                                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                    if (!firebaseUser.isEmailVerified())
+                                    {
+                                        firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(activity, "Email xác nhận đã được gửi", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
     }
 
 }
