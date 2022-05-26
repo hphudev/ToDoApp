@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#BF000000"
+        android:text="Danh sách mới"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="25dp"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp">
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/emoji_add_icon"
+            android:backgroundTint="@color/transperant"/>
+        <EditText
+            android:id="@+id/edt_name_task_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:hint="Nhập tên danh sách"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Màu"
+        android:backgroundTint="@color/purple_700"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="25dp"
+        android:gravity="right">
+        <Button
+            android:id="@+id/btn_cancel_dialog_create_task_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy bỏ"
+            android:textColor="@color/black"
+            android:layout_marginRight="12dp"
+            android:background="@color/transperant"/>
+        <Button
+            android:id="@+id/btn_confirm_create_task_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tạo danh sách"
+            android:textStyle="bold"
+            android:textColor="@color/purple_700"
+            android:background="@color/transperant"/>
+    </LinearLayout>
+
+</LinearLayout>

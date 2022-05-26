@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 
     private void init()
     {
+//      RecycleView
         recycvCustomItem = (RecyclerView)findViewById(R.id.recycv_custom_item);
         recycvDefaultItem = (RecyclerView)findViewById(R.id.recycv_default_item);
         itemTaskAdapter = new ItemTaskAdapter(this);
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         recycvDefaultItem.setLayoutManager(linearLayoutManager);
         itemTaskAdapter.setData(getListItemTasks());
         recycvDefaultItem.setAdapter(itemTaskAdapter);
-
+//
         imgUserProfile = (ImageView) findViewById(R.id.img_user_profile);
         btnSignOut = (FloatingActionButton)findViewById(R.id.btn_sign_out);
         btnSignOut.setOnClickListener(new View.OnClickListener() {
