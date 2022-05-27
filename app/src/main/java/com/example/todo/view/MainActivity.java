@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,10 +40,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
     private ItemTaskAdapter itemTaskAdapterCustom;
     private ActivityMainBinding activityMainBinding;
     private MainViewModel mainViewModel;
+    private List<ItemTaskModel> itemTaskModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,10 +104,11 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         recycvDefaultItem.setLayoutManager(linearLayoutManagerDefault);
         recycvCustomItem.setLayoutManager(linearLayoutManagerCustom);
         itemTaskAdapterDefault.setData(getListItemTasks());
-//        itemTaskAdapterCustom.setData(getListItemTasksOnFirestore());
         loadListItemTasksOnFirestore();
         recycvDefaultItem.setAdapter(itemTaskAdapterDefault);
         recycvCustomItem.setAdapter(itemTaskAdapterCustom);;
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recycvCustomItem);
 //
         imgUserProfile = (ImageView) findViewById(R.id.img_user_profile);
         btnSignOut = (FloatingActionButton)findViewById(R.id.btn_sign_out);
@@ -125,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
     }
 
     private List<ItemTaskModel> getListItemTasks() {
-        List<ItemTaskModel> itemTaskModelList = new ArrayList<>();
+        itemTaskModelList = new ArrayList<>();
         itemTaskModelList.add(new ItemTaskModel(R.drawable.sun_icon, "Ngày của tôi"));
         itemTaskModelList.add(new ItemTaskModel(R.drawable.star_icon, "Quan trọng"));
         itemTaskModelList.add(new ItemTaskModel(R.drawable.plan_icon, "Đã lập kế hoạch"));
@@ -137,10 +142,10 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
     }
 
     private void loadListItemTasksOnFirestore(){
-        List<ItemTaskModel> itemTaskModelList = new ArrayList<>();
+        itemTaskModelList = new ArrayList<>();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("danhsach")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        Query query = firestore.collection("danhsach").whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail()).orderBy("STT");
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (error != null)
@@ -148,15 +153,33 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                             return;
                         }
                         itemTaskModelList.clear();
+                        QuerySnapshot querySnapshot = value;
                         for (QueryDocumentSnapshot document : value)
                         {
                             itemTaskModelList.add(new ItemTaskModel(R.drawable.ic_baseline_format_list_bulleted_24, document.get("TenDS").toString()));
                         }
-//                        itemTaskAdapterCustom.clear();
                         itemTaskAdapterCustom.setData(itemTaskModelList);
                     }
                 });
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN
+            | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            Collections.swap(itemTaskModelList, fromPosition, toPosition);
+            recycvCustomItem.getAdapter().notifyItemMoved(fromPosition, toPosition);
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
+
     private void GoogleSignOut() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser == null)

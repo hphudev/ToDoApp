@@ -26,7 +26,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -144,27 +147,43 @@ public class MainViewModel extends BaseObservable {
 
     public void createTaskList( String title, int backgroundColor, int textColor) {
         Toast.makeText(activity, title, Toast.LENGTH_LONG).show();
-        Map<String, Object> map = new HashMap<>();
-        map.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        map.put("MauNen", backgroundColor);
-        map.put("MauChu", textColor);
-        map.put("TenDS", title);
+
+
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("danhsach")
-                .add(map)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(activity.getApplicationContext(), "Đã nhập", Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
+                .whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful())
+                                {
+                                    Map<String, Object> map = new HashMap<>();
+                                    map.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                                    map.put("MauNen", backgroundColor);
+                                    map.put("MauChu", textColor);
+                                    map.put("TenDS", title);
+                                    QuerySnapshot querySnapshot = task.getResult();
+                                    map.put("STT", querySnapshot.size() + 1);
+                                    firestore.collection("danhsach")
+                                            .add(map)
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    if (task.isSuccessful())
+                                                    {
+                                                        Toast.makeText(activity.getApplicationContext(), "Đã nhập", Toast.LENGTH_LONG).show();
+                                                    }
+                                                    else
+                                                    {
 
-                        }
-                    }
-                });
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        });
+
 
     }
 
