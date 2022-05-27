@@ -187,4 +187,9 @@ public class MainViewModel extends BaseObservable {
 
     }
 
+    public void updatePositionTaskList()
+    {
+
+    }
+
 }

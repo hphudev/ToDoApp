@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.R;
@@ -18,7 +19,7 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class ItemTaskAdapter extends RecyclerView.Adapter<ItemTaskAdapter.ItemTaskViewHolder>{
+public class ItemTaskAdapter extends RecyclerView.Adapter<ItemTaskAdapter.ItemTaskViewHolder> {
     private Context context;
     private List<ItemTaskModel> mListTask;
 
@@ -61,6 +62,7 @@ public class ItemTaskAdapter extends RecyclerView.Adapter<ItemTaskAdapter.ItemTa
             return mListTask.size();
         return 0;
     }
+
 
     public class ItemTaskViewHolder extends RecyclerView.ViewHolder{
         private ImageView icon;
