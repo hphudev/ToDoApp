@@ -31,6 +31,14 @@ public class ItemTaskAdapter extends RecyclerView.Adapter<ItemTaskAdapter.ItemTa
         this.mListTask = itemTaskModelList;
         notifyDataSetChanged();
     }
+
+    public void addData(ItemTaskModel itemTaskModel)
+    {
+        this.mListTask.add(itemTaskModel);
+        notifyDataSetChanged();
+    }
+
+
     @NonNull
     @Override
     public ItemTaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
