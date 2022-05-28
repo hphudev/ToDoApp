@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -46,6 +47,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
     private void loadListItemTasksOnFirestore(){
         itemTaskModelList = new ArrayList<>();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Query query = firestore.collection("danhsach").whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail()).orderBy("STT");
+        Query query = firestore.collection("danhsach").whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -156,8 +158,22 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                         QuerySnapshot querySnapshot = value;
                         for (QueryDocumentSnapshot document : value)
                         {
-                            itemTaskModelList.add(new ItemTaskModel(R.drawable.ic_baseline_format_list_bulleted_24, document.get("TenDS").toString()));
+                            itemTaskModelList.add(new ItemTaskModel(R.drawable.ic_baseline_format_list_bulleted_24, document.get("TenDS").toString(), document.getId(), Integer.parseInt(document.get("STT").toString())));
                         }
+                        Collections.sort(itemTaskModelList, new Comparator<ItemTaskModel>() {
+                            @Override
+                            public int compare(ItemTaskModel o1, ItemTaskModel o2) {
+                                if (o1.getStt() > o2.getStt()) {
+                                    return 1;
+                                }
+                                else if (o1.getStt() < o2.getStt()) {
+                                    return -1;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            }
+                        });
                         itemTaskAdapterCustom.setData(itemTaskModelList);
                     }
                 });
@@ -171,12 +187,26 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
             int toPosition = target.getAdapterPosition();
             Collections.swap(itemTaskModelList, fromPosition, toPosition);
             recycvCustomItem.getAdapter().notifyItemMoved(fromPosition, toPosition);
-            return false;
+            return true;
         }
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        }
 
+        @Override
+        public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+//            mainViewModel.updatePositionTaskList(itemTaskModelList);
+        }
+
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+            if (actionState == ItemTouchHelper.ACTION_STATE_IDLE)
+            {
+                mainViewModel.updatePositionTaskList(itemTaskModelList);
+            }
         }
     };
 

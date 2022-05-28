@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import androidx.databinding.Bindable;
 
 import com.example.todo.BR;
 import com.example.todo.R;
+import com.example.todo.model.data.ItemTaskModel;
 import com.example.todo.view.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +34,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -165,6 +170,7 @@ public class MainViewModel extends BaseObservable {
                                     map.put("TenDS", title);
                                     QuerySnapshot querySnapshot = task.getResult();
                                     map.put("STT", querySnapshot.size() + 1);
+                                    map.put("Created_at", Calendar.getInstance().getTime());
                                     firestore.collection("danhsach")
                                             .add(map)
                                             .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -187,9 +193,39 @@ public class MainViewModel extends BaseObservable {
 
     }
 
-    public void updatePositionTaskList()
+    public void updatePositionTaskList(List<ItemTaskModel> modelList)
     {
-
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int stt = 0;
+                for (ItemTaskModel model:
+                        modelList) {
+                    stt++;
+                    Map<String, Object> hasMap = new HashMap<>();
+                    hasMap.put("STT", stt);
+                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                    firestore.collection("danhsach")
+                            .document(model.getId())
+                            .update(hasMap)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful())
+                                    {
+                                        Log.d("main", "Đã cập nhật chỉ số");
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                thread.start();
+            }
+        }, 1000);
     }
 
 }
