@@ -10,13 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDo">
         <activity
+            android:name=".view.TaskListActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.RegisterActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.LoginActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SplashActivity"
             android:exported="true"

@@ -189,8 +189,6 @@ public class MainViewModel extends BaseObservable {
                                 }
                             }
                         });
-
-
     }
 
     public void updatePositionTaskList(List<ItemTaskModel> modelList)
@@ -220,12 +218,7 @@ public class MainViewModel extends BaseObservable {
                 }
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                thread.start();
-            }
-        }, 1000);
+        thread.start();
     }
 
 }

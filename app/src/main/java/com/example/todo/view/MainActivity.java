@@ -174,7 +174,12 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                                 }
                             }
                         });
-                        itemTaskAdapterCustom.setData(itemTaskModelList);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                itemTaskAdapterCustom.setData(itemTaskModelList);
+                            }
+                        }, 1500);
                     }
                 });
     }

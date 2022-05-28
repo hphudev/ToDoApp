@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.todo.R;
 
 import java.util.Timer;
@@ -24,14 +27,17 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        TimerTask task = new TimerTask() {
+        LottieAnimationView lottieAnimationView = (LottieAnimationView)findViewById(R.id.animation_view);
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+//                lottieAnimationView.pauseAnimation();
+                lottieAnimationView.setVisibility(View.GONE);
                 Intent intent = new Intent( getBaseContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
+
             }
-        };
-        new Timer().schedule(task, 1000);
+        }, 5000);
     }
 }
