@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.todo.R;
 
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        getSupportActionBar().hide(); // hide the title bar
+//        Objects.requireNonNull(getSupportActionBar()).hide(); // hide the title bar
     }
 
     @Override

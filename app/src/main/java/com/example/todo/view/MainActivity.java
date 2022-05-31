@@ -13,27 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.todo.R;
 import com.example.todo.databinding.ActivityMainBinding;
-import com.example.todo.model.data.ItemTaskModel;
+import com.example.todo.model.data.ItemTaskListModel;
+import com.example.todo.model.interfaces.ItemTaskInterface;
 import com.example.todo.model.library.CustomAlertDialog;
 import com.example.todo.view.adapter.ItemTaskAdapter;
 import com.example.todo.viewmodel.MainViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,11 +44,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import yuku.ambilwarna.AmbilWarnaDialog;
-
-public class MainActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface {
+public class MainActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface, ItemTaskInterface {
 
     private FloatingActionButton btnSignOut;
     private ImageView imgUserProfile;
@@ -66,20 +58,18 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
     private ItemTaskAdapter itemTaskAdapterCustom;
     private ActivityMainBinding activityMainBinding;
     private MainViewModel mainViewModel;
-    private List<ItemTaskModel> itemTaskModelList;
+    private List<ItemTaskListModel> itemTaskListModelListDefault;
+    private List<ItemTaskListModel> itemTaskListModelListCustom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainViewModel = new MainViewModel(this);
         activityMainBinding.setMainViewModel(mainViewModel);
         init();
         checkEmailVerify();
     }
-
 
     private void checkEmailVerify()
     {
@@ -99,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 //      RecycleView
         recycvCustomItem = (RecyclerView)findViewById(R.id.recycv_custom_item);
         recycvDefaultItem = (RecyclerView)findViewById(R.id.recycv_default_item);
-        itemTaskAdapterDefault = new ItemTaskAdapter(this);
-        itemTaskAdapterCustom = new ItemTaskAdapter(this);
+        itemTaskAdapterDefault = new ItemTaskAdapter(this, this, "default");
+        itemTaskAdapterCustom = new ItemTaskAdapter(this, this, "custom");
         LinearLayoutManager linearLayoutManagerDefault = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         LinearLayoutManager linearLayoutManagerCustom = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recycvDefaultItem.setLayoutManager(linearLayoutManagerDefault);
@@ -131,20 +121,20 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 
     }
 
-    private List<ItemTaskModel> getListItemTasks() {
-        itemTaskModelList = new ArrayList<>();
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.sun_icon, "Ngày của tôi"));
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.star_icon, "Quan trọng"));
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.plan_icon, "Đã lập kế hoạch"));
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.infinite_icon, "Tất cả"));
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.checked_icon, "Đã hoàn thành"));
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.ic_baseline_person_24, "Đã giao cho tôi"));
-        itemTaskModelList.add(new ItemTaskModel(R.drawable.task_icon, "Tác vụ"));
-        return itemTaskModelList;
+    private List<ItemTaskListModel> getListItemTasks() {
+        itemTaskListModelListDefault = new ArrayList<>();
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.sun_icon, "Ngày của tôi"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.star_icon, "Quan trọng"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.plan_icon, "Đã lập kế hoạch"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.infinite_icon, "Tất cả"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.checked_icon, "Đã hoàn thành"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.ic_baseline_person_24, "Đã giao cho tôi"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.task_icon, "Tác vụ"));
+        return itemTaskListModelListDefault;
     }
 
     private void loadListItemTasksOnFirestore(){
-        itemTaskModelList = new ArrayList<>();
+         itemTaskListModelListCustom= new ArrayList<>();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Query query = firestore.collection("danhsach").whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -154,15 +144,15 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                         {
                             return;
                         }
-                        itemTaskModelList.clear();
+                        itemTaskListModelListCustom.clear();
                         QuerySnapshot querySnapshot = value;
                         for (QueryDocumentSnapshot document : value)
                         {
-                            itemTaskModelList.add(new ItemTaskModel(R.drawable.ic_baseline_format_list_bulleted_24, document.get("TenDS").toString(), document.getId(), Integer.parseInt(document.get("STT").toString())));
+                            itemTaskListModelListCustom.add(new ItemTaskListModel(R.drawable.ic_baseline_format_list_bulleted_24, document.get("TenDS").toString(), document.getId(), Integer.parseInt(document.get("STT").toString()), Integer.parseInt(document.get("MauNen").toString()), Integer.parseInt(document.get("MauChu").toString())));
                         }
-                        Collections.sort(itemTaskModelList, new Comparator<ItemTaskModel>() {
+                        Collections.sort(itemTaskListModelListCustom, new Comparator<ItemTaskListModel>() {
                             @Override
-                            public int compare(ItemTaskModel o1, ItemTaskModel o2) {
+                            public int compare(ItemTaskListModel o1, ItemTaskListModel o2) {
                                 if (o1.getStt() > o2.getStt()) {
                                     return 1;
                                 }
@@ -177,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                itemTaskAdapterCustom.setData(itemTaskModelList);
+                                itemTaskAdapterCustom.setData(itemTaskListModelListCustom);
                             }
-                        }, 1500);
+                        }, 1000);
                     }
                 });
     }
@@ -190,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             int fromPosition = viewHolder.getAdapterPosition();
             int toPosition = target.getAdapterPosition();
-            Collections.swap(itemTaskModelList, fromPosition, toPosition);
+            Collections.swap(itemTaskListModelListCustom, fromPosition, toPosition);
             recycvCustomItem.getAdapter().notifyItemMoved(fromPosition, toPosition);
             return true;
         }
@@ -210,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
             super.onSelectedChanged(viewHolder, actionState);
             if (actionState == ItemTouchHelper.ACTION_STATE_IDLE)
             {
-                mainViewModel.updatePositionTaskList(itemTaskModelList);
+                mainViewModel.updatePositionTaskList(itemTaskListModelListCustom);
             }
         }
     };
@@ -230,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 
         }
     }
-
 
     @Override
     public void onPositiveEvent(DialogFragment dialogFragment, int requestCode) {
@@ -267,5 +256,25 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                 }
             }, 500);
         }
+    }
+
+    @Override
+    public void onItemClick(int position, String type) {
+        Bundle bundle = new Bundle();
+        if (type.equals("custom")) {
+            bundle.putString("id", itemTaskListModelListCustom.get(position).getId());
+            bundle.putString("title", itemTaskListModelListCustom.get(position).getTitle());
+            bundle.putInt("backgroundColor", itemTaskListModelListCustom.get(position).getBackgroundColor());
+            bundle.putInt("titleColor", itemTaskListModelListCustom.get(position).getTextColor());
+        }
+        else{
+            bundle.putString("id", itemTaskListModelListDefault.get(position).getId());
+            bundle.putString("title", itemTaskListModelListDefault.get(position).getTitle());
+            bundle.putInt("backgroundColor", itemTaskListModelListDefault.get(position).getBackgroundColor());
+            bundle.putInt("titleColor", itemTaskListModelListDefault.get(position).getTextColor());
+        }
+        Intent intent = new Intent(this, TaskListActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

@@ -19,8 +19,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        getSupportActionBar().hide();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register);
         registerViewModel = new RegisterViewModel(this);
         activityRegisterBinding.setRegisterViewModel(registerViewModel);

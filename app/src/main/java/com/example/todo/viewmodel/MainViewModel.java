@@ -3,35 +3,25 @@ package com.example.todo.viewmodel;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.example.todo.BR;
 import com.example.todo.R;
-import com.example.todo.model.data.ItemTaskModel;
-import com.example.todo.view.MainActivity;
+import com.example.todo.model.data.ItemTaskListModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
@@ -45,9 +35,10 @@ public class MainViewModel extends BaseObservable {
     private String title;
     private Activity activity;
     private String nameNewTaskList;
-    private int colorNewTaskList = R.color.purple_700;
+    private int colorNewTaskList;
     public MainViewModel(Activity activity){
         this.activity = activity;
+        colorNewTaskList = activity.getResources().getColor(R.color.blue);
     }
 
     @Bindable
@@ -90,10 +81,12 @@ public class MainViewModel extends BaseObservable {
         dialoOpenCreateTaskList.show();
 
         Button cancelButton = dialoOpenCreateTaskList.findViewById(R.id.btn_cancel_dialog_create_task_list);
-        Button openColorPickerDialog = dialoOpenCreateTaskList.findViewById(R.id.btn_open_dialog_color_picker);
-        Button createTaskList = dialoOpenCreateTaskList.findViewById(R.id.btn_confirm_create_task_list);
+        Button btnOpenColorPickerDialog = dialoOpenCreateTaskList.findViewById(R.id.btn_open_dialog_color_picker);
+        Button btnCreateTaskList = dialoOpenCreateTaskList.findViewById(R.id.btn_confirm_create_task_list);
         EditText editNameList = dialoOpenCreateTaskList.findViewById(R.id.edt_name_task_list);
 
+        btnOpenColorPickerDialog.setBackgroundColor(colorNewTaskList);
+        btnOpenColorPickerDialog.setTextColor(Color.WHITE);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,22 +94,23 @@ public class MainViewModel extends BaseObservable {
             }
         });
 
-        openColorPickerDialog.setOnClickListener(new View.OnClickListener() {
+        btnOpenColorPickerDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialogColorPicker(false, openColorPickerDialog, getColorNewTaskList());
+                openDialogColorPicker(false, btnOpenColorPickerDialog, getColorNewTaskList());
             }
         });
 
-        createTaskList.setOnClickListener(new View.OnClickListener() {
+        btnCreateTaskList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int backgroundColor = v.getSolidColor();
+
                 if (editNameList.getText().toString().equals("")){
                     editNameList.setError("Bạn chưa nhập tên danh sách");
                     return;
                 }
-                createTaskList(editNameList.getText().toString(), openColorPickerDialog.getCurrentTextColor(),backgroundColor);
+//                Toast.makeText(activity.getApplicationContext(), String.valueOf(backgroundColor), Toast.LENGTH_LONG).show();
+                createTaskListOnFireStore(editNameList.getText().toString(),colorNewTaskList, btnOpenColorPickerDialog.getTextColors().getDefaultColor());
                 dialoOpenCreateTaskList.dismiss();
             }
         });
@@ -124,36 +118,28 @@ public class MainViewModel extends BaseObservable {
 
     public void openDialogColorPicker(boolean supportsAlpha, Button openColorPickerDialog, int currentColor)
     {
-        Toast.makeText(activity.getApplicationContext(), "Đã vào", Toast.LENGTH_LONG).show();
+//        Toast.makeText(activity.getApplicationContext(), "Đã vào", Toast.LENGTH_LONG).show();
         final AmbilWarnaDialog dialog = new AmbilWarnaDialog(activity, currentColor, supportsAlpha, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 setColorNewTaskList(color);
                 openColorPickerDialog.setBackgroundColor(color);
-                Color colorTmp = null;
+                int v = (Color.red(color) + Color.green(color) + Color.blue(color)) / 3 > 128 ? 0 : 255;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    colorTmp = Color.valueOf(color);
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    float v = (colorTmp.red() + colorTmp.green() + colorTmp.blue()) / 3 > 0.5 ? 0 : 1;
-                    Toast.makeText(activity, String.valueOf(v), Toast.LENGTH_LONG).show();
-//                    openColorPickerDialog.setTextColor(Color.rgb(v, v, v));
-                    openColorPickerDialog.setTextColor(Color.rgb(1 - colorTmp.red(), 1 - colorTmp.green(), 1 - colorTmp.blue()));
+                    openColorPickerDialog.setTextColor(Color.rgb(v, v, v));
                 }
             }
 
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
-                Toast.makeText(activity.getApplicationContext(), "Action canceled!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(activity.getApplicationContext(), "Action canceled!", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
     }
 
-    public void createTaskList( String title, int backgroundColor, int textColor) {
-        Toast.makeText(activity, title, Toast.LENGTH_LONG).show();
-
-
+    public void createTaskListOnFireStore( String title, int backgroundColor, int textColor) {
+//        Toast.makeText(activity, title, Toast.LENGTH_LONG).show();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("danhsach")
                 .whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail())
@@ -178,7 +164,7 @@ public class MainViewModel extends BaseObservable {
                                                 public void onComplete(@NonNull Task<DocumentReference> task) {
                                                     if (task.isSuccessful())
                                                     {
-                                                        Toast.makeText(activity.getApplicationContext(), "Đã nhập", Toast.LENGTH_LONG).show();
+//                                                        Toast.makeText(activity.getApplicationContext(), "Đã nhập", Toast.LENGTH_LONG).show();
                                                     }
                                                     else
                                                     {
@@ -191,13 +177,13 @@ public class MainViewModel extends BaseObservable {
                         });
     }
 
-    public void updatePositionTaskList(List<ItemTaskModel> modelList)
+    public void updatePositionTaskList(List<ItemTaskListModel> modelList)
     {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 int stt = 0;
-                for (ItemTaskModel model:
+                for (ItemTaskListModel model:
                         modelList) {
                     stt++;
                     Map<String, Object> hasMap = new HashMap<>();
@@ -211,7 +197,7 @@ public class MainViewModel extends BaseObservable {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful())
                                     {
-                                        Log.d("main", "Đã cập nhật chỉ số");
+//                                        Log.d("main", "Đã cập nhật chỉ số");
                                     }
                                 }
                             });
