@@ -66,11 +66,16 @@
 
                 <ExpandableListView
                     android:id="@+id/expand_list_view_tasks"
+                    android:layout_marginTop="20dp"
+                    android:padding="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@color/black"
+                    android:divider="@color/transperant"
+                    android:childDivider="@color/transperant"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:scrollbars="none"
-                    android:dividerHeight="1dp">
+                    android:dividerHeight="5dp">
                 </ExpandableListView>
 
             </LinearLayout>
@@ -98,7 +103,9 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="#FFFFFF" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <include layout="@layout/layout_create_task"/>
+        <include
+            android:id="@+id/included_bottom_sheet"
+            layout="@layout/layout_create_task"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

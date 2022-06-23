@@ -124,7 +124,8 @@ public class MainViewModel extends BaseObservable {
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 setColorNewTaskList(color);
                 openColorPickerDialog.setBackgroundColor(color);
-                int v = (Color.red(color) + Color.green(color) + Color.blue(color)) / 3 > 128 ? 0 : 255;
+//                int v = (Color.red(color) + Color.green(color) + Color.blue(color)) / 3 > 128 ? 0 : 255;
+                int v = 255;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     openColorPickerDialog.setTextColor(Color.rgb(v, v, v));
                 }

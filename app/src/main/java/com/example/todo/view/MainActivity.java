@@ -26,7 +26,7 @@ import com.example.todo.databinding.ActivityMainBinding;
 import com.example.todo.model.data.ItemTaskListModel;
 import com.example.todo.model.interfaces.ItemTaskInterface;
 import com.example.todo.model.library.CustomAlertDialog;
-import com.example.todo.view.adapter.ItemTaskAdapter;
+import com.example.todo.view.adapter.ItemTaskListAdapter;
 import com.example.todo.viewmodel.MainViewModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private RecyclerView recycvCustomItem;
     private RecyclerView recycvDefaultItem;
-    private ItemTaskAdapter itemTaskAdapterDefault;
-    private ItemTaskAdapter itemTaskAdapterCustom;
+    private ItemTaskListAdapter itemTaskListAdapterDefault;
+    private ItemTaskListAdapter itemTaskListAdapterCustom;
     private ActivityMainBinding activityMainBinding;
     private MainViewModel mainViewModel;
     private List<ItemTaskListModel> itemTaskListModelListDefault;
@@ -89,16 +89,16 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 //      RecycleView
         recycvCustomItem = (RecyclerView)findViewById(R.id.recycv_custom_item);
         recycvDefaultItem = (RecyclerView)findViewById(R.id.recycv_default_item);
-        itemTaskAdapterDefault = new ItemTaskAdapter(this, this, "default");
-        itemTaskAdapterCustom = new ItemTaskAdapter(this, this, "custom");
+        itemTaskListAdapterDefault = new ItemTaskListAdapter(this, this, "default");
+        itemTaskListAdapterCustom = new ItemTaskListAdapter(this, this, "custom");
         LinearLayoutManager linearLayoutManagerDefault = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         LinearLayoutManager linearLayoutManagerCustom = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recycvDefaultItem.setLayoutManager(linearLayoutManagerDefault);
         recycvCustomItem.setLayoutManager(linearLayoutManagerCustom);
-        itemTaskAdapterDefault.setData(getListItemTasks());
+        itemTaskListAdapterDefault.setData(getListItemTasks());
         loadListItemTasksOnFirestore();
-        recycvDefaultItem.setAdapter(itemTaskAdapterDefault);
-        recycvCustomItem.setAdapter(itemTaskAdapterCustom);;
+        recycvDefaultItem.setAdapter(itemTaskListAdapterDefault);
+        recycvCustomItem.setAdapter(itemTaskListAdapterCustom);;
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recycvCustomItem);
 //
@@ -123,13 +123,13 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
 
     private List<ItemTaskListModel> getListItemTasks() {
         itemTaskListModelListDefault = new ArrayList<>();
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.sun_icon, "Ngày của tôi"));
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.star_icon, "Quan trọng"));
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.plan_icon, "Đã lập kế hoạch"));
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.infinite_icon, "Tất cả"));
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.checked_icon, "Đã hoàn thành"));
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.ic_baseline_person_24, "Đã giao cho tôi"));
-        itemTaskListModelListDefault.add(new ItemTaskListModel(R.drawable.task_icon, "Tác vụ"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel("Today", R.drawable.sun_icon, "Ngày của tôi"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel("Important",R.drawable.star_icon, "Quan trọng"));
+//        itemTaskListModelListDefault.add(new ItemTaskListModel("Planning", R.drawable.plan_icon, "Đã lập kế hoạch"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel("All", R.drawable.infinite_icon, "Tất cả"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel("Completed", R.drawable.checked_icon, "Đã hoàn thành"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel("MyTask", R.drawable.ic_baseline_person_24, "Đã giao cho tôi"));
+        itemTaskListModelListDefault.add(new ItemTaskListModel("Tasks", R.drawable.task_icon, "Tác vụ"));
         return itemTaskListModelListDefault;
     }
 
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                itemTaskAdapterCustom.setData(itemTaskListModelListCustom);
+                                itemTaskListAdapterCustom.setData(itemTaskListModelListCustom);
                             }
                         }, 1000);
                     }

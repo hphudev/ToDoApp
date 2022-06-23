@@ -9,12 +9,12 @@ public class ItemTaskListModel {
     int stt;
     int backgroundColor;
     int textColor;
-    public ItemTaskListModel(int icon, String title) {
+    public ItemTaskListModel(String id, int icon, String title) {
         this.icon = icon;
         this.title = title;
-        id = "null";
+        this.id = id;
         stt = 0;
-        backgroundColor = Color.BLUE;
+        backgroundColor = Color.parseColor("#1582D8");
         textColor = Color.WHITE;
     }
     public ItemTaskListModel(int icon, String title, String id, int stt, int backgroundColor, int textColor) {

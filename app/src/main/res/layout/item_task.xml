@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@drawable/custom_border_white"
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:orientation="horizontal">
@@ -24,18 +23,17 @@
         android:visibility="visible"
         android:textAlignment="center"/>
     <TextView
-        android:id="@+id/tv_task_name"
-        android:layout_width="310dp"
+        android:id="@+id/tv_name_task"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:paddingStart="12dp"
         android:text="Mẫu"
         android:textSize="18dp"
         android:gravity="center_vertical"/>
-    <ImageButton android:id="@+id/favorite"
+    <ImageButton android:id="@+id/img_btn_favorite"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:src="@drawable/star"
-        android:background="#00ffffff"
-        android:onClick="onToggleStar"/>
+        android:src="@drawable/star_off"
+        android:background="#00ffffff"/>
 
 </LinearLayout>
