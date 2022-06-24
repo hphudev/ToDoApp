@@ -1,6 +1,7 @@
 package com.example.todo.view;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,11 +19,17 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -46,6 +53,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -134,6 +142,87 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
 //        }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        String id = taskListViewModel.getId();
+        if (id.equals("All") || id.equals("Tasks") || id.equals("Today") || id.equals("Completed") || id.equals("Important") || id.equals("MyTask"))
+            return true;
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.menu_person_add:
+                addPartner();
+                break;
+            case R.id.menu_list_person:
+                showListPartner();
+                break;
+        }
+        return true;
+    }
+
+    private void showListPartner() {
+    }
+
+    private void addPartner() {
+        final Dialog dialoAddPartnerList = new Dialog(this);
+        dialoAddPartnerList.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialoAddPartnerList.setCancelable(true);
+        dialoAddPartnerList.setCanceledOnTouchOutside(false);
+        dialoAddPartnerList.setContentView(R.layout.layout_add_partner);
+        dialoAddPartnerList.show();
+
+        EditText edtEmail = dialoAddPartnerList.findViewById(R.id.edt_email);
+        Button addPartner = dialoAddPartnerList.findViewById(R.id.btn_confirm);
+        addPartner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("MaDS", taskListViewModel.getId());
+                map.put("Email", edtEmail.getText().toString().toLowerCase());
+                FirebaseFirestore.getInstance().collection("danhsach_congsu")
+                        .whereEqualTo("Email", edtEmail.getText().toString().toLowerCase())
+                        .whereEqualTo("MaDS", taskListViewModel.getId())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful())
+                                {
+                                    if (task.getResult().isEmpty()){
+                                        FirebaseFirestore.getInstance().collection("danhsach_congsu")
+                                                .add(map)
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                        if (task.isSuccessful())
+                                                        {
+                                                            Toast.makeText(TaskListActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                                            dialoAddPartnerList.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+        Button cancel = dialoAddPartnerList.findViewById(R.id.btn_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialoAddPartnerList.dismiss();
+            }
+        });
+    }
+
     private void initExpandableListView() {
         expandableListView = findViewById(R.id.expand_list_view_tasks);
         expandableListView.setAdapter(itemTaskExpandListViewAdapter);
@@ -166,60 +255,97 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                         .whereEqualTo("MaDS", taskListViewModel.getId());
                 break;
         }
-        query
-        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null)
-                    return;
-                itemTaskModelListIncompleted.clear();
-                itemTaskModelListCompleted.clear();
-                mListItems.clear();
-                int count = 0;
-                for (QueryDocumentSnapshot document: value) {
-                    if (taskListViewModel.getId().equals("Today"))
-                    {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                        try {
-                            Date dateOnDatabase = simpleDateFormat.parse(document.getString("NhacNho"));
-                            if (!simpleDateFormat.format(dateOnDatabase).equals(simpleDateFormat.format(new Date())))
-                                continue;
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+        if (taskListViewModel.getId().equals("MyTask"))
+        {
+            FirebaseFirestore.getInstance().collection("nhiemvu")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                            return;
+                        QuerySnapshot result_1 = value;
+                        FirebaseFirestore.getInstance().collection("danhsach_congsu")
+                                .whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        if (error != null)
+                                            return;
+                                        itemTaskModelListIncompleted.clear();
+                                        itemTaskModelListCompleted.clear();
+                                        mListItems.clear();
+                                        for (QueryDocumentSnapshot documentSnapshot_2 : value) {
+                                            int count = 0;
+                                            for (QueryDocumentSnapshot documentSnapshot_1 : result_1) {
+                                                if (documentSnapshot_1.getString("MaDS").equals(documentSnapshot_2.getString("MaDS")))
+                                                {
+                                                    count++;
+                                                    if (!documentSnapshot_1.getBoolean("TinhTrang"))
+                                                        itemTaskModelListIncompleted.add(new ItemTaskModel(count, documentSnapshot_1.getId().toString(), documentSnapshot_1.getString("MaDS"), documentSnapshot_1.getString("TenNV"),
+                                                                documentSnapshot_1.getString("NgayDenHan"), documentSnapshot_1.getString("NhacNho"), documentSnapshot_1.getBoolean("QuanTrong"), documentSnapshot_1.getBoolean("TinhTrang")));
+                                                    else
+                                                        itemTaskModelListCompleted.add(new ItemTaskModel(count, documentSnapshot_1.getId(), documentSnapshot_1.getString("MaDS"), documentSnapshot_1.getString("TenNV"),
+                                                                documentSnapshot_1.getString("NgayDenHan"), documentSnapshot_1.getString("NhacNho"), documentSnapshot_1.getBoolean("QuanTrong"), documentSnapshot_1.getBoolean("TinhTrang")));
+                                                }
+                                            }
+                                        }
+                                        if (!taskListViewModel.getId().equals("Completed"))
+                                            mListItems.put(groupObjectModel1, itemTaskModelListIncompleted);
+                                        mListItems.put(groupObjectModel2, itemTaskModelListCompleted);
+                                        groupObjectModelList = new ArrayList<>(mListItems.keySet());
+                                        itemTaskExpandListViewAdapter.changeData(groupObjectModelList, mListItems);
+                                        expandableListView.expandGroup(0);
+                                        if (!taskListViewModel.getId().equals("Completed"))
+                                            expandableListView.expandGroup(1);
+                                    }
+                                });
+
                     }
-                    count++;
-                    if (!document.getBoolean("TinhTrang"))
-                        itemTaskModelListIncompleted.add(new ItemTaskModel(count, document.getId().toString(), document.getString("MaDS"), document.getString("TenNV"),
-                                document.getString("NgayDenHan"), document.getString("NhacNho"), document.getBoolean("QuanTrong"), document.getBoolean("TinhTrang")));
-                    else
-                        itemTaskModelListCompleted.add(new ItemTaskModel(count, document.getId(), document.getString("MaDS"), document.getString("TenNV"),
-                                document.getString("NgayDenHan"), document.getString("NhacNho"), document.getBoolean("QuanTrong"), document.getBoolean("TinhTrang")));
+                });
+        }
+        else
+        {
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error != null)
+                        return;
+                    itemTaskModelListIncompleted.clear();
+                    itemTaskModelListCompleted.clear();
+                    mListItems.clear();
+                    int count = 0;
+                    for (QueryDocumentSnapshot document: value) {
+                        if (taskListViewModel.getId().equals("Today"))
+                        {
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            try {
+                                Date dateOnDatabase = simpleDateFormat.parse(document.getString("NhacNho"));
+                                if (!simpleDateFormat.format(dateOnDatabase).equals(simpleDateFormat.format(new Date())))
+                                    continue;
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        count++;
+                        if (!document.getBoolean("TinhTrang"))
+                            itemTaskModelListIncompleted.add(new ItemTaskModel(count, document.getId().toString(), document.getString("MaDS"), document.getString("TenNV"),
+                                    document.getString("NgayDenHan"), document.getString("NhacNho"), document.getBoolean("QuanTrong"), document.getBoolean("TinhTrang")));
+                        else
+                            itemTaskModelListCompleted.add(new ItemTaskModel(count, document.getId(), document.getString("MaDS"), document.getString("TenNV"),
+                                    document.getString("NgayDenHan"), document.getString("NhacNho"), document.getBoolean("QuanTrong"), document.getBoolean("TinhTrang")));
+                    }
+                    if (!taskListViewModel.getId().equals("Completed"))
+                        mListItems.put(groupObjectModel1, itemTaskModelListIncompleted);
+                    mListItems.put(groupObjectModel2, itemTaskModelListCompleted);
+                    groupObjectModelList = new ArrayList<>(mListItems.keySet());
+                    itemTaskExpandListViewAdapter.changeData(groupObjectModelList, mListItems);
+                    expandableListView.expandGroup(0);
+                    if (!taskListViewModel.getId().equals("Completed"))
+                        expandableListView.expandGroup(1);
                 }
-                if (!taskListViewModel.getId().equals("Completed"))
-                    mListItems.put(groupObjectModel1, itemTaskModelListIncompleted);
-                mListItems.put(groupObjectModel2, itemTaskModelListCompleted);
-                groupObjectModelList = new ArrayList<>(mListItems.keySet());
-                itemTaskExpandListViewAdapter.changeData(groupObjectModelList, mListItems);
-                expandableListView.expandGroup(0);
-                if (!taskListViewModel.getId().equals("Completed"))
-                    expandableListView.expandGroup(1);
-//
-//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app);
-//                Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                NotificationCompat.Builder builder = new NotificationCompat.Builder(TaskListActivity.this, CHANNEL_ID)
-//                        .setSmallIcon(R.drawable.star_on)
-//                        .setLargeIcon(bitmap)
-//                        .setSound(uri)
-//                        .setContentTitle("Đồng bộ dữ liệu")
-//                        .setContentText("VnDo đã đồng bộ dữ liệu.")
-//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                        .setStyle(new NotificationCompat.BigTextStyle()
-//                                .bigText("Đang đồng bộ dữ liệu..."));
-//                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(TaskListActivity.this);
-//                notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
-            }
-        });
+            });
+        }
+
     }
 
     private void initCreateTask() {

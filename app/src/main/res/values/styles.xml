@@ -31,4 +31,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginLeft">12dp</item>
     </style>
+
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 </resources>

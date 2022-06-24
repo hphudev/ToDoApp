@@ -15,11 +15,13 @@
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_lock_icon.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_person_icon.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_arrow_upward_24.xml" value="0.1235" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1215" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.2125" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_email_24_focused.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_lock_24_focused.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_person_24_focused.xml" value="0.186" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_person_add_24.xml" value="0.1215" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_schedule_24.xml" value="0.1235" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1235" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/star.xml" value="0.1235" />
@@ -30,9 +32,12 @@
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/activity_task_list.xml" value="0.176" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/item_task.xml" value="0.2" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/item_task_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_add_partner.xml" value="0.2234375" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_create_task.xml" value="0.264" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_dialog_create_list_task.xml" value="0.2" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_dialog_show_detail_info_task.xml" value="0.2234375" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_group_item.xml" value="0.2526041666666667" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_partner.xml" value="0.20625" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_task_main.xml" value="0.2" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/menu/menu.xml" value="0.2234375" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2125" />

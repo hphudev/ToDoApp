@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="Thêm cộng sự"
+        android:icon="@drawable/ic_baseline_person_add_24"
+        android:id="@+id/menu_person_add"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:title="Danh sách cộng sự"
+        android:icon="@drawable/custom_person_icon"
+        android:id="@+id/menu_list_person"
+        app:showAsAction="never"/>
+    <item
+        android:title="Cài đặt"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:id="@+id/menu_setting"
+        app:showAsAction="never"/>
 
+    <item
+        android:title="Xóa"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:id="@+id/menu_delete"
+        app:showAsAction="never"/>
 </menu>

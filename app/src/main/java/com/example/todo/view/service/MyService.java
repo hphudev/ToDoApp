@@ -56,7 +56,7 @@ public class MyService extends Service {
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                                Log.e("VnDO", "listen");
+                                Log.e("vndo", "listen");
                                 if (error != null)
                                     return;
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -75,11 +75,11 @@ public class MyService extends Service {
                                         assert date != null;
                                         if (date.before(new Date()))
                                         {
-//                                            Log.e("VnDO", "continue");
+                                            Log.e("VnDO", "continue");
                                             continue;
                                         }
                                         else
-                                            Log.e("VnDO", "setting alarm");
+                                            Log.e("vndo", "setting alarm");
                                         PendingIntent pendingIntent = PendingIntent.getBroadcast(MyService.this, count, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                         if (Build.VERSION.SDK_INT >= 23) {
                                             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,

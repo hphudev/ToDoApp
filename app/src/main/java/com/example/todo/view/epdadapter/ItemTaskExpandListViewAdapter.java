@@ -139,15 +139,7 @@ public class ItemTaskExpandListViewAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap bitmap = BitmapFactory.decodeResource(parent.getContext().getResources(), R.mipmap.ic_app);
-                Notification notification = new Notification.Builder(parent.getContext())
-                        .setContentTitle("Title push notification")
-                        .setContentText("This is a message")
-                        .setSmallIcon(R.drawable.star_on)
-                        .setLargeIcon(bitmap)
-                        .build();
-                NotificationManager notificationManager = (NotificationManager) parent.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(NOTIFICATION_ID, notification);
+                Toast.makeText(parent.getContext(), "clicked", Toast.LENGTH_SHORT).show();
             }
         });
         return convertView;

@@ -39,6 +39,8 @@
                     android:id="@+id/toolbar_2"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    android:theme="@style/AppTheme.ActionBar"
                     app:layout_collapseMode="pin">
 
                     <!--                    <ImageButton-->

@@ -19,7 +19,6 @@ public class TaskItemViewModel {
     static public void update(Context context, ItemTaskModel itemTaskModel) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Map<String, Object> map = new HashMap<>();
-        map.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         map.put("MaDS", itemTaskModel.getMaDS());
         map.put("NgayDenHan", itemTaskModel.getNgayDenHan());
         map.put("NhacNho", itemTaskModel.getNhacNho());
@@ -27,7 +26,7 @@ public class TaskItemViewModel {
         map.put("TenNV", itemTaskModel.getTenNV());
         map.put("TinhTrang", itemTaskModel.getTinhTrang());
         firestore.collection("nhiemvu").document(itemTaskModel.getId())
-                .set(map)
+                .update(map)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
