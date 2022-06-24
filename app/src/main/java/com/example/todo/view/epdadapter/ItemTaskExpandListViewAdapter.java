@@ -1,5 +1,10 @@
 package com.example.todo.view.epdadapter;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.todo.R;
@@ -20,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemTaskExpandListViewAdapter extends BaseExpandableListAdapter {
+    private static final int NOTIFICATION_ID = 1301;
     private List<GroupObjectModel> groupObjectModelList;
     private Map<GroupObjectModel, List<ItemTaskModel>> mListItems;
 
@@ -127,6 +134,20 @@ public class ItemTaskExpandListViewAdapter extends BaseExpandableListAdapter {
                     imageButton.setImageResource(R.drawable.star_off);
                     TaskItemViewModel.update(parent.getContext(), itemTaskModel);
                 }
+            }
+        });
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = BitmapFactory.decodeResource(parent.getContext().getResources(), R.mipmap.ic_app);
+                Notification notification = new Notification.Builder(parent.getContext())
+                        .setContentTitle("Title push notification")
+                        .setContentText("This is a message")
+                        .setSmallIcon(R.drawable.star_on)
+                        .setLargeIcon(bitmap)
+                        .build();
+                NotificationManager notificationManager = (NotificationManager) parent.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(NOTIFICATION_ID, notification);
             }
         });
         return convertView;

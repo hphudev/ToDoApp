@@ -2,4 +2,6 @@
     <string name="app_name">VnDo</string>
     <string name="nameApp">Quản lý công việc</string>
     <string name="client_web_id">541301564999-po7v303o1vcpfmggstbg9sq5jflvk89i.apps.googleusercontent.com</string>
+    <string name="channel_name">phu</string>
+    <string name="channel_description">phu xuat sac</string>
 </resources>

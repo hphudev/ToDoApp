@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.todo">
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
+        android:name=".view.service.MyApplication"
+        android:launchMode="singleTop"
         android:allowBackup="true"
         android:icon="@mipmap/ic_app"
         android:label="@string/app_name"
@@ -11,7 +17,12 @@
         android:theme="@style/Theme.ToDo">
         <activity
             android:name=".view.TaskListActivity"
-            android:exported="false" />
+            android:parentActivityName=".view.MainActivity"
+            android:exported="false" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.MainActivity" />
+        </activity>
         <activity
             android:name=".view.RegisterActivity"
             android:exported="false"
@@ -33,6 +44,8 @@
         <activity
             android:name=".view.MainActivity"
             android:exported="false" />
+        <service android:enabled="true" android:name=".view.service.MyService"/>
+        <receiver android:process=":remote"  android:name=".view.service.AlarmReceiver"/>
     </application>
 
 </manifest>

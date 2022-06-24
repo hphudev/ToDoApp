@@ -1,9 +1,19 @@
 package com.example.todo.view;
 
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.os.Bundle;
@@ -20,6 +30,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -59,6 +71,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TaskListActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface {
 
+    private static final int NOTIFICATION_ID = 1301;
+    private static final String CHANNEL_ID = "1301";
     private ActivityTaskListBinding activityTaskListBinding;
     private TaskListViewModel taskListViewModel;
     private Toolbar toolbar;
@@ -109,6 +123,15 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
         initBottomSheet();
         initCreateTask();
         initExpandableListView();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = getString(R.string.channel_name);
+//            String description = getString(R.string.channel_description);
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
     }
 
     private void initExpandableListView() {
@@ -142,8 +165,7 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                 query = firestore.collection("nhiemvu")
                         .whereEqualTo("MaDS", taskListViewModel.getId());
                 break;
-        };
-
+        }
         query
         .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -157,8 +179,14 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                 for (QueryDocumentSnapshot document: value) {
                     if (taskListViewModel.getId().equals("Today"))
                     {
-                        if (!new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()).equals(document.getString("NhacNho")))
-                            continue;
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        try {
+                            Date dateOnDatabase = simpleDateFormat.parse(document.getString("NhacNho"));
+                            if (!simpleDateFormat.format(dateOnDatabase).equals(simpleDateFormat.format(new Date())))
+                                continue;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                     count++;
                     if (!document.getBoolean("TinhTrang"))
@@ -176,6 +204,20 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                 expandableListView.expandGroup(0);
                 if (!taskListViewModel.getId().equals("Completed"))
                     expandableListView.expandGroup(1);
+//
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app);
+//                Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(TaskListActivity.this, CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.star_on)
+//                        .setLargeIcon(bitmap)
+//                        .setSound(uri)
+//                        .setContentTitle("Đồng bộ dữ liệu")
+//                        .setContentText("VnDo đã đồng bộ dữ liệu.")
+//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                        .setStyle(new NotificationCompat.BigTextStyle()
+//                                .bigText("Đang đồng bộ dữ liệu..."));
+//                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(TaskListActivity.this);
+//                notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
             }
         });
     }
@@ -241,8 +283,12 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                     map.put("GhiChu", "");
                     if (checkSetCalendarExpired)
                         map.put("NgayDenHan", new SimpleDateFormat("dd-MM-yyyy").format(calendarExpired.getTime()));
+                    else
+                        map.put("NgayDenHan", "null");
                     if (checkSetCalendarRemind)
-                        map.put("NhacNho", new SimpleDateFormat("dd-MM-yyyy").format(calendarRemind.getTime()));
+                        map.put("NhacNho", new SimpleDateFormat("dd-MM-yyyy HH:mm").format(calendarRemind.getTime()));
+                    else
+                        map.put("NhacNho", "null");
                     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                     firestore.collection("nhiemvu")
                             .add(map)

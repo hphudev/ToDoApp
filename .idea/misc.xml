@@ -6,6 +6,8 @@
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable-anydpi/ic_baseline_done_24.xml" value="0.137" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/affect_ripple.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/corner_button.xml" value="0.1235" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_border.xml" value="0.1235" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_border_white.xml" value="0.1235" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_button_round.xml" value="0.1235" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_email_icon.xml" value="0.186" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/drawable/custom_input.xml" value="0.2585" />
@@ -30,7 +32,9 @@
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/item_task_list.xml" value="0.25416666666666665" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_create_task.xml" value="0.264" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_dialog_create_list_task.xml" value="0.2" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_group_item.xml" value="0.2526041666666667" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/layout/layout_task_main.xml" value="0.2" />
+        <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/menu/menu.xml" value="0.2234375" />
         <entry key="..\:/CODE_SKILL/2022/Android/ToDo/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2125" />
       </map>
     </option>

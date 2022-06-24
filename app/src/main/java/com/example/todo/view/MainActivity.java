@@ -27,6 +27,7 @@ import com.example.todo.model.data.ItemTaskListModel;
 import com.example.todo.model.interfaces.ItemTaskInterface;
 import com.example.todo.model.library.CustomAlertDialog;
 import com.example.todo.view.adapter.ItemTaskListAdapter;
+import com.example.todo.view.service.MyService;
 import com.example.todo.viewmodel.MainViewModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -69,6 +70,17 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         activityMainBinding.setMainViewModel(mainViewModel);
         init();
         checkEmailVerify();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startService();
+    }
+
+    private void startService() {
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
     }
 
     private void checkEmailVerify()

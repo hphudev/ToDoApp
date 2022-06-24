@@ -32,7 +32,7 @@ public class TaskItemViewModel {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(context, "Updated successfully", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "Updated successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
