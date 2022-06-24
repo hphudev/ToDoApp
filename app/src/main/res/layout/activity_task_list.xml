@@ -68,17 +68,16 @@
 
                 <ExpandableListView
                     android:id="@+id/expand_list_view_tasks"
-                    android:layout_marginTop="20dp"
-                    android:padding="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@color/transperant"
+                    android:layout_marginTop="20dp"
                     android:childDivider="@color/transperant"
                     android:clickable="true"
+                    android:divider="@color/transperant"
+                    android:dividerHeight="5dp"
                     android:focusable="true"
-                    android:scrollbars="none"
-                    android:dividerHeight="5dp">
-                </ExpandableListView>
+                    android:padding="12dp"
+                    android:scrollbars="none"></ExpandableListView>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

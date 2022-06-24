@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="12dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="22sp"
+        android:textStyle="bold"
         android:text="Tên nhiệm vụ"/>
+
+    <TextView
+        android:id="@+id/tv_name_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Tên nhiệm vụ"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:text="Ngày hết hạn"/>
+    <TextView
+        android:id="@+id/tv_date_expired"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:padding="12dp"
+        android:text="Tên nhiệm vụ"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:text="Thời gian nhắc nhở"/>
+    <TextView
+        android:id="@+id/tv_remind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Tên nhiệm vụ"/>
+   <Button
+       android:id="@+id/btn_delete_task"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="Xóa nhiệm vụ"
+       android:backgroundTint="#D61204"
+       android:textStyle="bold"/>
 
 </LinearLayout>

@@ -53,6 +53,7 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         FirebaseFirestore.getInstance().collection("nhiemvu")
                 .whereEqualTo("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .whereEqualTo("TinhTrang", false)
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

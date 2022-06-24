@@ -163,8 +163,60 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
             case R.id.menu_list_person:
                 showListPartner();
                 break;
+            case R.id.menu_delete:
+                deleteList();
         }
         return true;
+    }
+
+    private void deleteList() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Bạn sẽ xóa danh sách này?")
+                .setContentText("Danh sách này sẽ được xóa vĩnh viễn!")
+                .setConfirmText("Xóa!")
+                .setConfirmButtonBackgroundColor(Color.RED)
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                        firestore.collection("danhsach").document(taskListViewModel.getId()).delete();
+                        firestore.collection("nhiemvu")
+                                        .whereEqualTo("MaDS", taskListViewModel.getId())
+                                                .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                                                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                                        documentSnapshot.getReference().delete();
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                        firestore.collection("danhsach_congsu")
+                                        .whereEqualTo("MaDS", taskListViewModel.getId())
+                                                .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                                                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                                        documentSnapshot.getReference().delete();
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .setCancelButton("Trở lại", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
     }
 
     private void showListPartner() {
@@ -404,7 +456,7 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                     map.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                     map.put("MaDS", taskListViewModel.getId());
                     map.put("TenNV", task_name);
-                    map.put("QuanTrong", false);
+                    map.put("QuanTrong", (taskListViewModel.getId().equals("Important")) ? true : false);
                     map.put("TinhTrang", false);
                     map.put("GhiChu", "");
                     if (checkSetCalendarExpired)
@@ -423,19 +475,19 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                                 public void onComplete(@NonNull Task<DocumentReference> task) {
                                     if (task.isSuccessful())
                                     {
-                                        new SweetAlertDialog(TaskListActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                                .setTitleText("Success")
-                                                .setContentText("You added new task successfully")
-                                                .setConfirmText("Continue")
-                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                    @Override
-                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                        activityTaskListBinding.includedBottomSheet.edtTaskName.setText("");
-                                                        checkSetCalendarExpired = checkSetCalendarRemind = false;
-                                                        sweetAlertDialog.dismissWithAnimation();
-                                                    }
-                                                })
-                                                .show();
+                                        activityTaskListBinding.includedBottomSheet.edtTaskName.setText("");
+                                        checkSetCalendarExpired = checkSetCalendarRemind = false;
+//                                        new SweetAlertDialog(TaskListActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                                .setTitleText("Thành công")
+//                                                .setContentText("Nhiệm vụ đã được thêm")
+//                                                .setConfirmText("")
+//                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                                    @Override
+//                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                                        sweetAlertDialog.dismissWithAnimation();
+//                                                    }
+//                                                })
+//                                                .show();
                                     }
                                 }
                             });
@@ -445,6 +497,8 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
     }
 
     private void initBottomSheet(){
+        if (taskListViewModel.getId().equals("Today") || taskListViewModel.getId().equals("MyTask") || taskListViewModel.getId().equals("Completed"))
+            fbtnAddTask.setVisibility(View.INVISIBLE);
         fbtnAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
