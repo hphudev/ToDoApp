@@ -41,12 +41,17 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.R;
 import com.example.todo.databinding.ActivityTaskListBinding;
 import com.example.todo.model.data.GroupObjectModel;
 import com.example.todo.model.data.ItemTaskModel;
+import com.example.todo.model.data.PartnerListModel;
+import com.example.todo.model.interfaces.PartnerItemInterface;
 import com.example.todo.model.library.CustomAlertDialog;
+import com.example.todo.view.adapter.PartnerListAdapter;
 import com.example.todo.view.epdadapter.ItemTaskExpandListViewAdapter;
 import com.example.todo.viewmodel.TaskListViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -77,7 +82,7 @@ import java.util.logging.SimpleFormatter;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class TaskListActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface {
+public class TaskListActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface, PartnerItemInterface {
 
     private static final int NOTIFICATION_ID = 1301;
     private static final String CHANNEL_ID = "1301";
@@ -101,7 +106,9 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
     private ItemTaskExpandListViewAdapter itemTaskExpandListViewAdapter = new ItemTaskExpandListViewAdapter(groupObjectModelList, mListItems);
     private GroupObjectModel groupObjectModel1 = new GroupObjectModel(1, "Incompleted");
     private GroupObjectModel groupObjectModel2 = new GroupObjectModel(2, "Completed");
-
+//
+    private PartnerListAdapter partnerListAdapter;
+    private List<PartnerListModel> partnerListModels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,7 +213,7 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
                                                                 }
                                                             }
                                                         });
-
+                        onBackPressed();
                         sDialog.dismissWithAnimation();
                     }
                 })
@@ -220,6 +227,32 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
     }
 
     private void showListPartner() {
+        final Dialog dialogListPartner = new Dialog(this);
+        dialogListPartner.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogListPartner.setCancelable(true);
+        dialogListPartner.setCanceledOnTouchOutside(true);
+        dialogListPartner.setContentView(R.layout.layout_dialog_list_partner);
+        dialogListPartner.show();
+
+        LinearLayoutManager linearLayoutManagerDefault = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        RecyclerView recyclerView = dialogListPartner.findViewById(R.id.rcv_list_partner);
+        recyclerView.setLayoutManager(linearLayoutManagerDefault);
+        partnerListModels = new ArrayList<>();
+        partnerListAdapter = new PartnerListAdapter(this, partnerListModels);
+        recyclerView.setAdapter(partnerListAdapter);
+        FirebaseFirestore.getInstance().collection("danhsach_congsu")
+                .whereEqualTo("MaDS", taskListViewModel.getId())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                            return;
+                        partnerListModels.clear();
+                        for (QueryDocumentSnapshot documentSnapshot : value)
+                            partnerListModels.add(new PartnerListModel(documentSnapshot.getString("MaDS"), documentSnapshot.getString("Email")));
+                        partnerListAdapter.setData(partnerListModels);
+                    }
+                });
     }
 
     private void addPartner() {
@@ -532,5 +565,40 @@ public class TaskListActivity extends AppCompatActivity implements CustomAlertDi
     @Override
     public void onNegativeEvent(DialogFragment dialogFragment, int requestCode) {
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Bạn sẽ xóa cộng sự này?")
+                .setContentText("Cộng sự này sẽ bị xóa khỏi danh sách này!")
+                .setConfirmText("Xóa")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        FirebaseFirestore.getInstance().collection("danhsach_congsu")
+                                        .whereEqualTo("Email", partnerListModels.get(position).getEmail())
+                                                .whereEqualTo("MaDS", partnerListModels.get(position).getMaDS())
+                                                        .get()
+                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                                                documentSnapshot.getReference().delete();
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                });
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .setCancelButton("Trở lại", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
     }
 }

@@ -11,11 +11,6 @@
         android:icon="@drawable/custom_person_icon"
         android:id="@+id/menu_list_person"
         app:showAsAction="never"/>
-    <item
-        android:title="Cài đặt"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:id="@+id/menu_setting"
-        app:showAsAction="never"/>
 
     <item
         android:title="Xóa"

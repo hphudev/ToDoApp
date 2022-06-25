@@ -29,10 +29,12 @@ public class PartnerListAdapter extends RecyclerView.Adapter<PartnerListAdapter.
 
     public void setData(List<PartnerListModel> partnerListModels) {
         this.partnerListModels = partnerListModels;
+        notifyDataSetChanged();
     }
 
     public void addData(PartnerListModel partnerListModel) {
         this.partnerListModels.add(partnerListModel);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -60,6 +62,12 @@ public class PartnerListAdapter extends RecyclerView.Adapter<PartnerListAdapter.
         public PartnerViewHolder(@NonNull View itemView, PartnerItemInterface partnerItemInterface) {
             super(itemView);
             textView = itemView.findViewById(R.id.tv_email);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    partnerItemInterface.onItemClick(getAbsoluteAdapterPosition());
+                }
+            });
         }
     }
 }

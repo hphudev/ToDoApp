@@ -38,7 +38,7 @@ public class UserModel {
     }
 
     public boolean isValidPassword(){
-        return !TextUtils.isEmpty(password) && password.length() > 6;
+        return !TextUtils.isEmpty(password) && password.length() >= 6;
     }
 
     public boolean isValidNickname()

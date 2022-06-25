@@ -118,7 +118,7 @@ public class MyService extends Service {
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Đang thống kê công việc hôm nay..."));
+                        .bigText("Đang giám sát..."));
         startForeground(1, builder.build());
     }
 

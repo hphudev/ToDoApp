@@ -30,6 +30,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -110,8 +113,20 @@ public class ItemTaskExpandListViewAdapter extends BaseExpandableListAdapter {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false);
         }
         ItemTaskModel itemTaskModel = mListItems.get(groupObjectModelList.get(groupPosition)).get(childPosition);
-
-        LottieAnimationView lottieAnimationView = convertView.findViewById(R.id.animation_view);
+//
+        TextView tv_check_Expired = convertView.findViewById(R.id.tv_check_expired);
+        if (!itemTaskModel.getNgayDenHan().equals("null")) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                Date date = simpleDateFormat.parse(itemTaskModel.getNgayDenHan());
+                Date now = new Date();
+                if (date.before(now) && !simpleDateFormat.format(date).toString().equals(simpleDateFormat.format(now).toString())) {
+                    tv_check_Expired.setVisibility(View.VISIBLE);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         CheckBox checkBox = convertView.findViewById(R.id.checkbox_task);
         checkBox.setChecked(itemTaskModel.getTinhTrang());
 //      Sự kiện cập nhật trạng thái hoàn thành, không hoàn thành
@@ -149,7 +164,6 @@ public class ItemTaskExpandListViewAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(parent.getContext(), "clicked", Toast.LENGTH_SHORT).show();
                 final Dialog dialogDetailTask = new Dialog(parent.getContext());
                 dialogDetailTask.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialogDetailTask.setCancelable(true);

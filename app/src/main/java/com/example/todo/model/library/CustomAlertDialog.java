@@ -48,7 +48,9 @@ public class CustomAlertDialog extends DialogFragment {
                 listener.onNegativeEvent(CustomAlertDialog.this, CustomAlertDialog.this.requestCode);
             }
         });
-        return builder.create();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        return alertDialog;
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,9 +47,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class MainActivity extends AppCompatActivity implements CustomAlertDialog.alertDialogInterface, ItemTaskInterface {
 
-    private FloatingActionButton btnSignOut;
+    private ImageButton btnSignOut;
+    private FloatingActionButton btnOpenChatApp;
     private ImageView imgUserProfile;
     private TextView tvCreateTaskList;
     private int CODE_CHECK_EMAIL_VERIFY = 1;
@@ -69,13 +73,27 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         mainViewModel = new MainViewModel(this);
         activityMainBinding.setMainViewModel(mainViewModel);
         init();
+        initOpenChatApp();
         checkEmailVerify();
+        startService();
+    }
+
+    private void initOpenChatApp() {
+        btnOpenChatApp = (FloatingActionButton)findViewById(R.id.btn_chat);
+        btnOpenChatApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.vndochat");
+                if (intent != null) {
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        startService();
     }
 
     private void startService() {
@@ -88,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (!firebaseUser.isEmailVerified())
         {
-            CustomAlertDialog customAlertDialog = new CustomAlertDialog("Xác minh tài khoản","Một email sẽ được gử cho bạn", CODE_CHECK_EMAIL_VERIFY);
+            CustomAlertDialog customAlertDialog = new CustomAlertDialog("Xác minh tài khoản","Một email sẽ được gửi cho bạn", CODE_CHECK_EMAIL_VERIFY);
             customAlertDialog.show(getSupportFragmentManager(), "dialog");
         }
         mainViewModel.setTitle(firebaseUser.getEmail());
@@ -115,17 +133,34 @@ public class MainActivity extends AppCompatActivity implements CustomAlertDialog
         itemTouchHelper.attachToRecyclerView(recycvCustomItem);
 //
         imgUserProfile = (ImageView) findViewById(R.id.img_user_profile);
-        btnSignOut = (FloatingActionButton)findViewById(R.id.btn_sign_out);
+        btnSignOut = (ImageButton)findViewById(R.id.btn_sign_out);
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        GoogleSignOut();
-                    }
-                }, 500);
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Bạn sẽ đăng xuất?")
+                        .setContentText("Bạn sẽ đăng xuất khỉ tài khoản này!")
+                        .setConfirmText("Vâng!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                mAuth.signOut();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        GoogleSignOut();
+                                    }
+                                }, 500);
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .setCancelButton("Trở lại", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
             }
         });
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.appbar_collapse);
