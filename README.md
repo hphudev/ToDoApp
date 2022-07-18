@@ -1,7 +1,3 @@
-
-## Lược đồ tính năng dành cho người dùng
-### Lược đồ dành cho chủ sở hữu (người đứng đầu)
-
 ## Tác giả
   - [Leader] *Lê Hoàng Phú - hphudev*
   - [Developer] *Trương Vĩnh Thái - truongvinhthai2506*
